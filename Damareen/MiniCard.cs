@@ -30,7 +30,6 @@ namespace Damareen
             kartya = k;
             Mode = MiniCardMode.DeckBuilder;
 
-            // Disable focus
             this.Focusable = false;
             this.FocusVisualStyle = null;
 
@@ -313,7 +312,6 @@ namespace Damareen
             }
             else
             {
-                // All regular cards get the same dark border
                 this.BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#333333"));
                 this.Effect = new DropShadowEffect
                 {
@@ -382,4 +380,5 @@ namespace Damareen
             if (m != null) m.RefreshCardDisplays();
         }
     }
+
 }
