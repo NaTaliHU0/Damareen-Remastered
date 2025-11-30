@@ -32,14 +32,9 @@ namespace Damareen
                         k.UpdateArrayData();
                         sw.WriteLine($"kartya;{k.Nev};{k.Attack};{k.Hp};{k.Tipus()}");
                     }
-                }
-                sw.WriteLine();
-
-                foreach (Kartya k in kartyak)
-                {
-                    if (!k.SimaKartya)
+                    else
                     {
-                        sw.WriteLine($"vezer;{string.Join(";", k.a.Skip(1))}");
+                        sw.WriteLine($"\nvezer;{k.Nev};{k.Attack};{k.Hp};{k.Tipus()}");
                     }
                 }
                 sw.WriteLine();
