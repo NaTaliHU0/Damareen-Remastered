@@ -183,7 +183,6 @@ namespace Damareen
                 }
                 else
                 {
-                    // Still mark as healed even in non-UI mode to prevent repeated attempts
                     WaterHealedThisRound = true;
                 }
             }
