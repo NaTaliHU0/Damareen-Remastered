@@ -160,8 +160,6 @@ namespace Damareen
         private static void Harc(List<Kartya> pakli, Kazamata valasztottKazamata, string file)
         {
             double n = (double)Vilag.NehezsegiSzint;
-
-            // Create clones and apply difficulty modifiers if needed
             List<Kartya> tpakli;
             List<Kartya> tkazamata;
 
@@ -201,8 +199,6 @@ namespace Damareen
                 bool kazamataLepett = false;
                 bool kazamataDamaged = false;
                 bool jatekosDamaged = false;
-
-                // Kazamata plays card
                 if (kazamataKiJatszik && !kazamataLepett)
                 {
                     kazamataKiJatszik = false;
@@ -211,8 +207,6 @@ namespace Damareen
                     AppendKijatszikLog(kor, "kazamata", playedCard, 0, doubleLine: false);
                     kazamataLepett = true;
                 }
-
-                // Kazamata attacks
                 if (!kazamataKiJatszik && !kazamataLepett)
                 {
                     Kartya tamado = tkazamata[0];
@@ -253,8 +247,6 @@ namespace Damareen
                     if (wasCrit) Naplo += ";kritikus";
                     if (kitert) Naplo += ";kitert";
                     Naplo += "\n";
-
-                    // Water heal immediately after taking damage
                     if (App.UIFlag && jatekosDamaged && vedo.CurrentHp > 0)
                     {
                         vedo.WaterHealedThisRound = false;
@@ -267,8 +259,6 @@ namespace Damareen
 
                     kazamataLepett = true;
                 }
-
-                // Check if player card died
                 if (tpakli[0].CurrentHp <= 0)
                 {
                     jatekosKiJatszik = true;
@@ -279,8 +269,6 @@ namespace Damareen
                         break;
                     }
                 }
-
-                // Player plays card
                 if (jatekosKiJatszik && !jatekosLepett)
                 {
                     jatekosKiJatszik = false;
@@ -289,8 +277,6 @@ namespace Damareen
                     AppendKijatszikLog(kor, "jatekos", playedCard, 0, doubleLine: true);
                     jatekosLepett = true;
                 }
-
-                // Player attacks
                 if (!jatekosKiJatszik && !jatekosLepett)
                 {
                     Kartya tamado = tpakli[0];
@@ -331,8 +317,6 @@ namespace Damareen
                     if (wasCrit) Naplo += ";kritikus";
                     if (kitert) Naplo += ";kitert";
                     Naplo += "\n";
-
-                    // Water heal immediately after taking damage
                     if (App.UIFlag && kazamataDamaged && vedo.CurrentHp > 0)
                     {
                         vedo.WaterHealedThisRound = false;
@@ -345,8 +329,6 @@ namespace Damareen
 
                     jatekosLepett = true;
                 }
-
-                // Check if kazamata card died
                 if (tkazamata[0].CurrentHp <= 0)
                 {
                     kazamataKiJatszik = true;
@@ -419,8 +401,6 @@ namespace Damareen
 
             PrintHarc(Naplo, file);
         }
-
-        // Helper: clone list, apply difficulty modifier, reset per-card flags & HP
         private static List<Kartya> CloneAndAdjust(IEnumerable<Kartya> source, bool forPlayer, double n)
         {
             var list = new List<Kartya>();
@@ -435,8 +415,6 @@ namespace Damareen
             }
             return list;
         }
-
-        // Helper: resolve one attack, returns final damage, and out flags
         private static int ResolveAttack(Kartya attacker, Kartya defender, out bool wasCrit, out bool dodged)
         {
             dodged = defender.TryDodge();
@@ -449,8 +427,6 @@ namespace Damareen
             int vegsoSebzes = defender.CalculateIncomingDamage(sebzesWithAdvantage);
             return vegsoSebzes;
         }
-
-        // Helper: append 'kijatszik' line
         private static void AppendKijatszikLog(int kor, string who, Kartya card, int unused, bool doubleLine)
         {
             Naplo += $"{kor}.kor;{who};kijatszik;{card.Nev};{card.Attack};{card.CurrentHp};{card.Tipus()}\n";
@@ -574,4 +550,5 @@ namespace Damareen
             }
         }
     }
+
 }
