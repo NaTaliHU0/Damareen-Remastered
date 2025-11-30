@@ -1,0 +1,427 @@
+﻿<Window x:Class="Damareen.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Damareen"
+        mc:Ignorable="d"
+        Title="Damareen: Remastered" 
+        Height="720" Width="1280" 
+        ResizeMode="NoResize" 
+        WindowState="Maximized" 
+        WindowStyle="None"
+        WindowStartupLocation="CenterScreen" 
+        Background="#000000" 
+        Closing="Window_Closing"
+        Loaded="Window_Loaded">
+    <Grid>
+        <Grid.Background>
+            <RadialGradientBrush Center="0.5,0.5" GradientOrigin="0.5,0.5" RadiusX="0.8" RadiusY="0.8">
+                <GradientStop Color="#1a0505" Offset="0"/>
+                <GradientStop Color="#000000" Offset="1"/>
+            </RadialGradientBrush>
+        </Grid.Background>
+
+        <Canvas x:Name="BackgroundCanvas" IsHitTestVisible="False"/>
+
+        <Grid x:Name="MainContent" Opacity="0">
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                <TextBlock Text="DAMAREEN" FontSize="110" Foreground="#A0A0A0" FontFamily="/Damareen;component/Fonts/MedievalSharp.ttf#MedievalSharp" HorizontalAlignment="Center">
+                    <TextBlock.Effect>
+                        <DropShadowEffect Color="#000000" BlurRadius="40" ShadowDepth="10"/>
+                    </TextBlock.Effect>
+                </TextBlock>
+                <TextBlock Text="REMASTERED" 
+                           FontSize="32" Foreground="#8a0303" Margin="0,-10,0,60" Opacity="0.9" 
+                           FontFamily="/Damareen;component/Fonts/MedievalSharp.ttf#MedievalSharp" HorizontalAlignment="Center">
+                    <TextBlock.Effect>
+                        <DropShadowEffect Color="#8a0303" BlurRadius="20" ShadowDepth="0" Opacity="0.5"/>
+                    </TextBlock.Effect>
+                </TextBlock>
+
+
+                <StackPanel x:Name="MenuStack" Margin="0,40,0,0">
+                    <Button Content="JÁTÉK" Click="ShowGameModeSelect" Margin="0,0,0,50" FontSize="30" Width="150"/>
+                    <Button Content="ÚTMUTATÁS" Click="ShowSugo" Margin="0,0,0,50" FontSize="30" Width="200"/>
+                    <Button Content="KILÉPÉS" Click="Exit" Margin="0,0,0,50" FontSize="30" Width="150"/>
+                </StackPanel>
+
+                <StackPanel x:Name="GameModeSelectUI" Margin="0,40,0,0" Visibility="Collapsed">
+                    <TextBlock Text="VÁLASSZ UTAT" FontSize="25" Foreground="#666" HorizontalAlignment="Center" Margin="0,0,0,40" FontFamily="/Damareen;component/Fonts/MedievalSharp.ttf#MedievalSharp"/>
+                    <Button Content="KAMPÁNY" Click="StartCampaignSetup" Margin="0,0,0,40" FontSize="30" Width="200"/>
+                    <Button Content="SAJÁT VILÁG" Click="ShowWorldCreateOrLoad" Margin="0,0,0,50" FontSize="30" Width="250"/>
+                    <Button Content="VISSZA" Click="BackToMainMenu" FontSize="30" Width="150" Foreground="#555"/>
+                </StackPanel>
+
+                <StackPanel x:Name="WorldCreateOrLoadUI" Margin="0,40,0,0" Visibility="Collapsed">
+                    <TextBlock Text="SAJÁT VILÁG" FontSize="25" Foreground="#C5A059" HorizontalAlignment="Center" Margin="0,0,0,40" FontFamily="/Damareen;component/Fonts/MedievalSharp.ttf#MedievalSharp"/>
+                    <Button Content="VILÁG KÉSZÍTÉSE" Click="ShowWorldCreateOptions" Margin="0,0,0,40" FontSize="30" Width="300"/>
+                    <Button Content="VILÁG BETÖLTÉSE" Click="ShowWorldLoadList" Margin="0,0,0,50" FontSize="30" Width="300"/>
+                    <Button Content="VISSZA" Click="BackToGameModeSelect" FontSize="30" Width="150" Foreground="#555"/>
+                </StackPanel>
+
+                <StackPanel x:Name="DifficultySelectUI" Margin="0,40,0,0" Visibility="Collapsed">
+                    <TextBlock Text="SORS NEHÉZSÉGE (0-10)" FontSize="25" Foreground="#C5A059" HorizontalAlignment="Center" Margin="0,0,0,30" FontFamily="/Damareen;component/Fonts/MedievalSharp.ttf#MedievalSharp"/>
+                    <TextBox x:Name="DiffInput" Width="400" FontSize="30" HorizontalContentAlignment="Center" Background="#111" Foreground="White" BorderBrush="#333" Margin="0,0,0,30"/>
+                    <Button Content="INDÍTÁS" Click="ConfirmDifficulty" Margin="0,0,0,30" FontSize="30" Width="150"/>
+                    <Button Content="MÉGSE" Click="CancelDifficulty" FontSize="30" Width="140" Foreground="#555"/>
+                </StackPanel>
+
+                <StackPanel x:Name="CustomWorldSelectUI" Margin="0,40,0,0" Visibility="Collapsed">
+                    <TextBlock Text="VILÁG KÉSZÍTÉSE" FontSize="25" Foreground="#C5A059" HorizontalAlignment="Center" Margin="0,0,0,40" FontFamily="/Damareen;component/Fonts/MedievalSharp.ttf#MedievalSharp"/>
+                    <Button Content="ÚJ VILÁG (ALAP KÁRTYÁKKAL)" Click="CreateBaseWorld_Click" Margin="0,0,0,40" FontSize="30" Width="400"/>
+                    <Button Content="ÚJ VILÁG (ÜRES)" Click="CreateEmptyWorld_Click" Margin="0,0,0,50" FontSize="30" Width="350"/>
+                    <Button Content="VISSZA" Click="BackToCreateOrLoad" FontSize="30" Width="200" Foreground="#555"/>
+                </StackPanel>
+
+                <StackPanel x:Name="WorldNameInputUI" Margin="0,40,0,0" Visibility="Collapsed">
+                    <TextBlock Text="ADD MEG A VILÁG NEVÉT" FontSize="25" Foreground="#C5A059" HorizontalAlignment="Center" Margin="0,0,0,20" FontFamily="/Damareen;component/Fonts/MedievalSharp.ttf#MedievalSharp"/>
+                    <TextBox x:Name="WorldNameInput" Width="400" FontSize="30" HorizontalContentAlignment="Center" Background="#111" Foreground="White" BorderBrush="#333" Margin="0,0,0,20"/>
+                    <Button Content="LÉTREHOZÁS" Click="ConfirmWorldName_Click" Margin="0,0,0,30" FontSize="30" Width="250"/>
+                    <Button Content="MÉGSE" Click="BackToCustomWorldSelect" FontSize="30" Width="150" Foreground="#555"/>
+                </StackPanel>
+
+                <StackPanel x:Name="WorldLoadUI" Margin="0,40,0,0" Visibility="Collapsed" Width="800">
+                    <TextBlock Text="VÁLASSZ EGY VILÁGOT" FontSize="30" Foreground="#C5A059" HorizontalAlignment="Center" Margin="0,0,0,30" FontFamily="/Damareen;component/Fonts/MedievalSharp.ttf#MedievalSharp"/>
+                    <Border Background="#0a0a0a" BorderBrush="#333" BorderThickness="1" CornerRadius="5" Height="450">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <ListBox x:Name="WorldFilesList" Background="Transparent" BorderThickness="0" Foreground="#ddd" FontSize="24" SelectionChanged="WorldFile_Selected"/>
+                        </ScrollViewer>
+                    </Border>
+                    <Button Content="VISSZA" Click="BackToCreateOrLoad" FontSize="30" Width="280" Foreground="#555" Margin="0,30,0,0"/>
+                </StackPanel>
+
+                <StackPanel x:Name="WorldLoadModeUI" Margin="0,40,0,0" Visibility="Collapsed">
+                    <TextBlock x:Name="SelectedWorldText" Text="VILÁG: " FontSize="28" Foreground="#666" HorizontalAlignment="Center" Margin="0,0,0,40" FontFamily="/Damareen;component/Fonts/MedievalSharp.ttf#MedievalSharp"/>
+                    <Button Content="KÉSZ VILÁG JÁTSZÁSA" Click="PlayWorld_Click" Margin="0,0,0,40" FontSize="30" Width="400"/>
+                    <Button Content="KÉSZ VILÁG SZERKESZTÉSE" Click="EditWorld_Click" Margin="0,0,0,40" FontSize="30" Width="400"/>
+                    <Button Content="MENTÉS TÖRLÉSE" Click="DeleteWorld_Click" Margin="0,0,0,50" FontSize="30" Width="300" Foreground="#8a0303"/>
+                    <Button Content="VISSZA" Click="BackToWorldLoadList" FontSize="30" Width="150" Foreground="#555"/>
+                </StackPanel>
+
+            </StackPanel>
+        </Grid>
+
+        <Grid x:Name="GameUI" Visibility="Hidden">
+
+
+            <Grid x:Name="DeckBuilderUI" Visibility="Hidden">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="100"/>
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Gyűjtemény" FontSize="26" Foreground="#666" HorizontalAlignment="Left" Margin="40,20,0,10" FontFamily="/Damareen;component/Fonts/MedievalSharp.ttf#MedievalSharp"/>
+
+                <Border Grid.Row="1" Grid.Column="0" Margin="40,0,20,0" Background="#050505" BorderBrush="#222" BorderThickness="1" CornerRadius="5">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" PanningMode="VerticalOnly" Focusable="False" FocusVisualStyle="{x:Null}">
+                        <WrapPanel x:Name="GyujtemenyPanel" HorizontalAlignment="Center" Margin="10" Focusable="False"/>
+                    </ScrollViewer>
+                </Border>
+
+                <Border Grid.Row="0" Grid.RowSpan="3" Grid.Column="1" Width="2" Background="#222" Margin="0,40"/>
+
+                <StackPanel Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center" Margin="0,20,0,5">
+                    <TextBlock Text="DECK" FontSize="26" Foreground="#C5A059" HorizontalAlignment="Center" FontFamily="/Damareen;component/Fonts/MedievalSharp.ttf#MedievalSharp"/>
+                    <TextBlock x:Name="DeckCountText" Text="0/0" FontSize="18" Foreground="#888" HorizontalAlignment="Center"/>
+                </StackPanel>
+
+                <Border Grid.Row="1" Grid.Column="2" Margin="20,0,40,0" Background="#080808" BorderBrush="#333" BorderThickness="1" CornerRadius="5">
+                    <Border.Effect>
+                        <DropShadowEffect Color="Black" BlurRadius="20" ShadowDepth="0"/>
+                    </Border.Effect>
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Focusable="False" FocusVisualStyle="{x:Null}">
+                        <WrapPanel x:Name="PakliPanel" HorizontalAlignment="Center" Margin="10" Orientation="Horizontal" Focusable="False"/>
+                    </ScrollViewer>
+                </Border>
+
+                <Button Grid.Row="2" Grid.Column="0" 
+                        Content="◄ VISSZA A FŐMENÜBE" 
+                        HorizontalAlignment="Left" VerticalAlignment="Center" 
+                        Margin="40,0,0,0" 
+                        FontSize="30" Foreground="#888"
+                        Click="BackToMenu">
+                    <Button.Effect>
+                        <DropShadowEffect Color="Black" BlurRadius="10" ShadowDepth="2"/>
+                    </Button.Effect>
+                </Button>
+
+                <Button x:Name="ToBattleBtn" Grid.Row="2" Grid.Column="2" 
+                        Content="TOVÁBB A CSATÁRA ►" 
+                        HorizontalAlignment="Right" VerticalAlignment="Center" 
+                        Margin="0,0,40,0" 
+                        FontSize="30" Foreground="#8a0303" FontWeight="Bold"
+                        Click="GoToKazamataSelect">
+                    <Button.Effect>
+                        <DropShadowEffect Color="#8a0303" BlurRadius="15" Opacity="0.6"/>
+                    </Button.Effect>
+                </Button>
+            </Grid>
+
+            <Grid x:Name="kazamataValasztas" Visibility="Hidden" Margin="40">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="VÁLASSZ VÉGZETET" FontSize="40" Foreground="#A8A8A8" FontFamily="/Damareen;component/Fonts/MedievalSharp.ttf#MedievalSharp" HorizontalAlignment="Center" Margin="0,0,0,40">
+                    <TextBlock.Effect>
+                        <DropShadowEffect Color="Black" BlurRadius="10" ShadowDepth="5"/>
+                    </TextBlock.Effect>
+                </TextBlock>
+
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" PanningMode="VerticalOnly" VerticalAlignment="Center">
+                    <WrapPanel x:Name="kazamatak" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </ScrollViewer>
+
+                <Button Grid.Row="2" Content="◄ VISSZA A DECKHEZ" Click="BackToDeckBuilder" HorizontalAlignment="Center" Margin="0,40,0,0" FontSize="30" Foreground="#666"/>
+            </Grid>
+
+            <Grid x:Name="sugoMenu" Visibility="Hidden" Margin="80">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Border Background="#080808" BorderBrush="#333" BorderThickness="2" Padding="40">
+                    <Border.Effect>
+                        <DropShadowEffect Color="Black" BlurRadius="50" ShadowDepth="10"/>
+                    </Border.Effect>
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <TextBlock TextWrapping="Wrap" Foreground="#aaa" FontSize="18" LineHeight="30" FontFamily="/Damareen;component/Fonts/MedievalSharp.ttf#MedievalSharp">
+                            <Run Foreground="#C5A059" FontSize="42">DAMAREEN - ÚTMUTATÓ</Run><LineBreak/><LineBreak/>
+                            
+                            <Bold Foreground="#8a0303" FontSize="28">═══ JÁTÉKMÓDOK ═══</Bold><LineBreak/><LineBreak/>
+                            
+                            <Bold Foreground="#C5A059">KAMPÁNY</Bold><LineBreak/>
+                            Az előre beállított kampány világgal játszol.<LineBreak/>
+                            Automatikus mentés: GameFiles/in.txt (világ) és GameFiles/in_player.txt (játékos).<LineBreak/>
+                            Minden harc után automatikusan menti az állapotot.<LineBreak/><LineBreak/>
+                            
+                            <Bold Foreground="#C5A059">SAJÁT VILÁG - VILÁG KÉSZÍTÉSE</Bold><LineBreak/>
+                            <Bold>Új Világ (Alap Kártyákkal):</Bold> A kampány kártyáival kezdesz.<LineBreak/>
+                            <Bold>Új Világ (Üres):</Bold> Teljesen üres világot hozhatsz létre.<LineBreak/>
+                            Mentés helye: GameFiles/Saves/{világ_neve}.txt és {világ_neve}_player.txt<LineBreak/><LineBreak/>
+                            
+                            <Bold Foreground="#C5A059">SAJÁT VILÁG - VILÁG BETÖLTÉSE</Bold><LineBreak/>
+                            Megmutatja az összes mentett világot a Saves mappából.<LineBreak/>
+                            <Bold>Kész Világ Játszása:</Bold> Játszhatsz a mentett világgal.<LineBreak/>
+                            <Bold>Kész Világ Szerkesztése:</Bold> Belépés a Világszerkesztőbe.<LineBreak/>
+                            <Bold>Mentés Törlése:</Bold> Véglegesen törli a kiválasztott világot.<LineBreak/><LineBreak/>
+                            
+                            <Bold Foreground="#8a0303" FontSize="28">═══ DECK ÉPÍTÉS ═══</Bold><LineBreak/><LineBreak/>
+                            
+                            Bal oldal: <Bold>Gyűjtemény</Bold> - Az összes megszerzett kártya.<LineBreak/>
+                            Jobb oldal: <Bold Foreground="#C5A059">Deck</Bold> - A harchoz kiválasztott kártyák.<LineBreak/><LineBreak/>
+                            
+                            <Bold>• Kártya hozzáadása:</Bold> Kattints a Gyűjteményben lévő kártyára.<LineBreak/>
+                            <Bold>• Kártya eltávolítása:</Bold> Kattints a Deckben lévő kártyára.<LineBreak/>
+                            <Bold>• Maximum méret:</Bold> A Deck legfeljebb a Gyűjtemény fele lehet.<LineBreak/>
+                            <Bold>• Vezérkártyák:</Bold> Arany kerettel, NEM adhatók a Deckhez.<LineBreak/>
+                            <Bold>• Fejlesztett kártyák:</Bold> A győzelem után kapott bónuszok véglegesek.<LineBreak/><LineBreak/>
+                            
+                            Ha készen vagy, nyomd meg: <Bold Foreground="#8a0303">"TOVÁBB A CSATÁRA ►"</Bold><LineBreak/><LineBreak/>
+                            
+                            <Bold Foreground="#8a0303" FontSize="28">═══ HARC RENDSZER ═══</Bold><LineBreak/><LineBreak/>
+                            
+                            Válassz kazamatát a "VÁLASSZ VÉGZETET" képernyőn.<LineBreak/>
+                            A csata automatikusan zajlik, és megtekintheted a részletes naplót.<LineBreak/><LineBreak/>
+                            
+                            <Bold Foreground="#C5A059">Kazamata Típusok:</Bold><LineBreak/>
+                            <Bold>💀 Egyszerű:</Bold> 1 sima kártya | Jutalom: +1 Sebzés VAGY +2 Életerő<LineBreak/>
+                            <Bold>💀💀 Kis:</Bold> 3 sima + 1 vezér | Jutalom: +1 Sebzés VAGY +2 Életerő<LineBreak/>
+                            <Bold>💀💀💀 Nagy:</Bold> 5 sima + 1 vezér | Jutalom: Új kártya a Gyűjteményhez<LineBreak/><LineBreak/>
+                            
+                            <Bold Foreground="#C5A059">Harc Mechanika:</Bold><LineBreak/>
+                            • A kártyák felváltva lépnek és támadnak<LineBreak/>
+                            • Ha egy kártya meghal, a következő azonnal kijátszásra kerül<LineBreak/>
+                            • Az első túlélő kártyád kapja a jutalom bónuszt<LineBreak/>
+                            • Bónuszok VÉGLEGESEK - növelik a kártya statjait a Gyűjteményben<LineBreak/>
+                            • Automatikus mentés minden harc után<LineBreak/><LineBreak/>
+                            
+                            <Bold Foreground="#8a0303" FontSize="28">═══ ELEMI TÍPUSOK ═══</Bold><LineBreak/><LineBreak/>
+                            
+                            <Bold>FONTOS:</Bold> Passzív képességek CSAK játékmódban (--ui) működnek!<LineBreak/>
+                            Teszt módban (konzol) csak az elemi előny/hátrány számít.<LineBreak/><LineBreak/>
+                            
+                            <Bold Foreground="#ff4500">🔥 TŰZ (Fire)</Bold><LineBreak/>
+                            <Bold>• Passzív:</Bold> 25% esély kritikus ütésre (1.5x sebzés)<LineBreak/>
+                            <Bold>• Erős ellene:</Bold> Föld, Víz (2x sebzés)<LineBreak/>
+                            <Bold>• Gyenge ellene:</Bold> Levegő (0.5x sebzés)<LineBreak/><LineBreak/>
+                            
+                            <Bold Foreground="#4169e1">💧 VÍZ (Water)</Bold><LineBreak/>
+                            <Bold>• Passzív:</Bold> Sebzés után AZONNAL gyógyul +25% max HP-val (max HP-ig)<LineBreak/>
+                            <Bold>• Erős ellene:</Bold> Tűz, Levegő (2x sebzés)<LineBreak/>
+                            <Bold>• Gyenge ellene:</Bold> Föld (0.5x sebzés)<LineBreak/><LineBreak/>
+                            
+                            <Bold Foreground="#8b7355">⛰️ FÖLD (Earth)</Bold><LineBreak/>
+                            <Bold>• Passzív:</Bold> Minden beérkező sebzést 25%-kal csökkent (0.75x)<LineBreak/>
+                            <Bold>• Erős ellene:</Bold> Levegő, Tűz (2x sebzés)<LineBreak/>
+                            <Bold>• Gyenge ellene:</Bold> Víz (0.5x sebzés)<LineBreak/><LineBreak/>
+                            
+                            <Bold Foreground="#87ceeb">🌪️ LEVEGŐ (Air)</Bold><LineBreak/>
+                            <Bold>• Passzív:</Bold> 25% esély a támadás teljes kitérésére (0 sebzés)<LineBreak/>
+                            <Bold>• Erős ellene:</Bold> Föld, Víz (2x sebzés)<LineBreak/>
+                            <Bold>• Gyenge ellene:</Bold> Tűz (0.5x sebzés)<LineBreak/><LineBreak/>
+                            
+                            <Bold Foreground="#8a0303" FontSize="28">═══ VILÁGSZERKESZTŐ ═══</Bold><LineBreak/><LineBreak/>
+                            
+                            <Bold Foreground="#C5A059">KARAKTEREK Tab:</Bold><LineBreak/><LineBreak/>
+                            
+                            <Bold>Sima Kártya Készítés:</Bold><LineBreak/>
+                            • Név: Maximum 16 karakter<LineBreak/>
+                            • Sebzés: 2-100 tartomány<LineBreak/>
+                            • Életerő: 1-100 tartomány<LineBreak/>
+                            • Elem: Tűz, Víz, Föld, Levegő<LineBreak/><LineBreak/>
+                            
+                            <Bold>Kártya Szerkesztés:</Bold><LineBreak/>
+                            • Jobb klikk → Szerkesztés (csak sima kártyák)<LineBreak/>
+                            • Módosítások a Gyűjteményre is hatnak<LineBreak/>
+                            • Vezérkártyák NEM szerkeszthetők<LineBreak/><LineBreak/>
+                            
+                            <Bold>Vezérkártya Készítés:</Bold><LineBreak/>
+                            • Választasz egy sima kártyát alapnak<LineBreak/>
+                            • Bónusz típus: Életerő (HP × 2) VAGY Sebzés (DMG × 2)<LineBreak/>
+                            • Maximum 16 karakter név<LineBreak/><LineBreak/>
+                            
+                            <Bold>Kártya Törlés:</Bold><LineBreak/>
+                            • Jobb klikk → Törlés<LineBreak/>
+                            • Eltávolítja mindenünnen (Gyűjtemény, Deck, Világ)<LineBreak/><LineBreak/>
+                            
+                            <Bold Foreground="#C5A059">KAZAMATÁK Tab:</Bold><LineBreak/><LineBreak/>
+                            
+                            <Bold>Kazamata Készítés:</Bold><LineBreak/>
+                            • Név: Maximum 20 karakter<LineBreak/>
+                            • Típus választás: Egyszerű / Kis / Nagy<LineBreak/>
+                            • Jutalom: Típustól függően automatikusan beállítva<LineBreak/><LineBreak/>
+                            
+                            <Bold>Kártya Hozzáadás/Eltávolítás:</Bold><LineBreak/>
+                            • Bal oldal: Elérhető Kártyák listája<LineBreak/>
+                            • Jobb oldal: Kazamata Tartalma<LineBreak/>
+                            • Kattints a kártyára a hozzáadáshoz/eltávolításhoz<LineBreak/>
+                            • Limitek: Egyszerű (1+0), Kis (3+1), Nagy (5+1)<LineBreak/><LineBreak/>
+                            
+                            <Bold>Jutalom Beállítás:</Bold><LineBreak/>
+                            • Egyszerű/Kis: Életerő (+2 HP) vagy Sebzés (+1 DMG)<LineBreak/>
+                            • Nagy: Automatikusan új kártya jutalom<LineBreak/><LineBreak/>
+                            
+                            <Bold>FONTOS:</Bold> Minden kazamatának teljesnek kell lennie mentés előtt!<LineBreak/><LineBreak/>
+                            
+                            <Bold Foreground="#8a0303" FontSize="28">═══ MENTÉS RENDSZER ═══</Bold><LineBreak/><LineBreak/>
+                            
+                            <Bold Foreground="#C5A059">Automatikus Mentés (Játék):</Bold><LineBreak/>
+                            • Minden harc után AUTOMATIKUSAN ment<LineBreak/>
+                            • Menti a világ állapotát (kazamaták, kártyák)<LineBreak/>
+                            • Menti a játékos állapotát (Gyűjtemény, Deck, fejlesztések)<LineBreak/>
+                            • Kampány: GameFiles/in.txt és in_player.txt<LineBreak/>
+                            • Saját Világ: GameFiles/Saves/{név}.txt és {név}_player.txt<LineBreak/><LineBreak/>
+                            
+                            <Bold Foreground="#C5A059">Manuális Mentés (Világszerkesztő):</Bold><LineBreak/>
+                            • "MENTÉS ÉS KILÉPÉS" gomb a felső menüben<LineBreak/>
+                            • Ellenőrzi, hogy minden kazamata teljes-e<LineBreak/>
+                            • Hibát jelez, ha hiányos kazamata van<LineBreak/>
+                            • Csak teljes világot lehet menteni<LineBreak/><LineBreak/>
+                            
+                            <Bold Foreground="#C5A059">Játékos Állapot Mentés:</Bold><LineBreak/>
+                            • Gyűjtemény: Minden kártya aktuális statjaival<LineBreak/>
+                            • Deck összetétel: Kiválasztott kártyák listája<LineBreak/>
+                            • Fejlesztések: Végleges stat növekedések<LineBreak/><LineBreak/>
+                            
+                            <Bold Foreground="#8a0303" FontSize="28">═══ NEHÉZSÉGI SZINT ═══</Bold><LineBreak/><LineBreak/>
+                            
+                            0-10 skála (0 = Normál, 10 = Nehéz):<LineBreak/><LineBreak/>
+                            
+                            <Bold Foreground="#C5A059">Játékos Módosítók (Csökkenés):</Bold><LineBreak/>
+                            • Véletlen sebzés csökkenés: 0% - 12.5% (n/20 × random)<LineBreak/>
+                            • 0 nehézség: Nincs csökkenés<LineBreak/>
+                            • 5 nehézség: ~0-6.25% csökkenés<LineBreak/>
+                            • 10 nehézség: ~0-12.5% csökkenés<LineBreak/><LineBreak/>
+                            
+                            <Bold Foreground="#C5A059">Ellenség Módosítók (Növekedés):</Bold><LineBreak/>
+                            • Véletlen sebzés növekedés: 0% - 25% (n/10 × random)<LineBreak/>
+                            • 0 nehézség: Nincs növekedés<LineBreak/>
+                            • 5 nehézség: ~0-12.5% növekedés<LineBreak/>
+                            • 10 nehézség: ~0-25% növekedés<LineBreak/><LineBreak/>
+                            
+                            <Bold>FONTOS:</Bold> A módosítók véletlenszerűek minden kártyára!<LineBreak/>
+                            0 nehézségen nincsenek módosítók, csak elemi előnyök számítanak.<LineBreak/><LineBreak/>
+                            
+                            <Bold Foreground="#C5A059" FontSize="24">Jó szerencsét, harcos!</Bold>
+                        </TextBlock>
+                    </ScrollViewer>
+                </Border>
+                <Button Grid.Row="1" Content="VISSZA" Click="BackToMenu" HorizontalAlignment="Center" Margin="0,30,0,0" FontSize="30"/>
+            </Grid>
+        </Grid>
+
+        <!-- Music Toggle Button -->
+        <Button x:Name="MusicToggleBtn" 
+                Content="🔊" 
+                HorizontalAlignment="Right" 
+                VerticalAlignment="Bottom" 
+                Margin="0,0,30,30" 
+                Width="60" 
+                Height="60"
+                FontSize="28"
+                Background="#0a0a0a"
+                Foreground="#C5A059"
+                BorderBrush="#333333"
+                BorderThickness="2"
+                Click="ToggleMusic"
+                Cursor="Hand"
+                ToolTip="Zene ki/be">
+            <Button.Effect>
+                <DropShadowEffect Color="Black" BlurRadius="15" ShadowDepth="3"/>
+            </Button.Effect>
+            <Button.Style>
+                <Style TargetType="Button">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="Button">
+                                <Border Name="Border" 
+                                        Background="{TemplateBinding Background}" 
+                                        BorderBrush="{TemplateBinding BorderBrush}" 
+                                        BorderThickness="{TemplateBinding BorderThickness}"
+                                        CornerRadius="30">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="Border" Property="Background" Value="#1a1a1a"/>
+                                        <Setter TargetName="Border" Property="BorderBrush" Value="#C5A059"/>
+                                    </Trigger>
+                                    <Trigger Property="IsPressed" Value="True">
+                                        <Setter TargetName="Border" Property="Background" Value="#050505"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </Button.Style>
+        </Button>
+    </Grid>
+
+    <Window.Triggers>
+        <EventTrigger RoutedEvent="Window.Loaded">
+            <BeginStoryboard>
+                <Storyboard>
+                    <DoubleAnimation Storyboard.TargetName="MainContent" Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:3" BeginTime="0:0:0.5"/>
+                    <ThicknessAnimation Storyboard.TargetName="MenuStack" Storyboard.TargetProperty="Margin" From="0,60,0,0" To="0,40,0,0" Duration="0:0:3" BeginTime="0:0:0.5">
+                        <ThicknessAnimation.EasingFunction>
+                            <QuadraticEase EasingMode="EaseOut"/>
+                        </ThicknessAnimation.EasingFunction>
+                    </ThicknessAnimation>
+                </Storyboard>
+            </BeginStoryboard>
+        </EventTrigger>
+    </Window.Triggers>
+</Window>

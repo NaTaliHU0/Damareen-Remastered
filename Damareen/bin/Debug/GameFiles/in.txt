@@ -1,0 +1,33 @@
+uj kartya;Arin;2;5;tuz
+uj kartya;Liora;2;4;levego
+uj kartya;Nerun;3;3;tuz
+uj kartya;Selia;2;6;viz
+uj kartya;Torak;3;4;fold
+uj kartya;Emera;2;5;levego
+uj kartya;Vorn;2;7;viz
+uj kartya;Kael;3;5;tuz
+uj kartya;Myra;2;6;fold
+uj kartya;Thalen;3;5;levego
+uj kartya;Isara;2;6;viz
+
+uj vezer;Lord Torak;Torak;sebzes
+uj vezer;Priestess Selia;Selia;eletero
+
+uj kazamata;egyszeru;Barlangi Portya;Nerun;sebzes
+uj kazamata;kis;Osi Szentely;Thalen,Emera,Selia;Lord Torak;eletero
+uj kazamata;nagy;A melyseg kiralynoje;Liora,Arin,Selia,Nerun,Torak;Priestess Selia
+
+uj jatekos
+
+felvetel gyujtemenybe;Arin
+felvetel gyujtemenybe;Liora
+felvetel gyujtemenybe;Selia
+felvetel gyujtemenybe;Nerun
+felvetel gyujtemenybe;Torak
+felvetel gyujtemenybe;Emera
+felvetel gyujtemenybe;Kael
+felvetel gyujtemenybe;Myra
+felvetel gyujtemenybe;Thalen
+felvetel gyujtemenybe;Isara
+
+
